@@ -1,8 +1,11 @@
+/* eslint-disable no-undef */
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const { DBConnection } = require('./config/database');
 require('dotenv').config();
+
+const { DBConnection } = require('./config/database');
+const { redisConnection } = require('./config/redis');
 
 const app = express();
 const AuthRoutes = require('./routes/AuthRoutes');
@@ -14,6 +17,8 @@ const ReimbursmentRoutes = require('./routes/ReimbursmentRoutes');
 const { unassignedOvertime, unassignedReimbursment } = require('./scheduler/NotificationScheduler');
 
 DBConnection();
+redisConnection();
+
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());

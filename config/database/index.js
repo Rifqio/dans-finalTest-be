@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize({
-  dialect: 'mysql',
-  username: 'root',
-  host: 'localhost',
-  database: 'api_dans_final_test',
+  dialect: process.env.DATABASE_DIALECT,
+  username: process.env.DATABASE_USERNAME,
+  host: process.env.DATABASE_HOST,
+  database: process.env.DATABASE_DB,
 });
 
 const DBConnection = async () => {
