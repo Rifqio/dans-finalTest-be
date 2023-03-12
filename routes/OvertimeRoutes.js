@@ -11,7 +11,7 @@ const { ProtectedHR, Protected } = require('../middleware/AuthMiddleware');
 route.get('/', Protected, getOvertime);
 route.post('/', Protected, createOvertime);
 route.get('/:id', Protected, getOvertimeById);
-route.put('/approve/:id', ProtectedHR, approveStatusOvertime);
-route.put('/reject/:id', ProtectedHR, rejectStatusOvertime);
+route.put('/approve', ProtectedHR, approveStatusOvertime);
+route.put('/reject', ProtectedHR, rejectStatusOvertime);
 
 module.exports = route;

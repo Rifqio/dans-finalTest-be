@@ -1,3 +1,4 @@
+const getAllListOvertimeRequest = require('../../lib/queries/GetAllListOvertimeRequest');
 const Overtime = require('../../model/OvertimeModel');
 const {
   sendOvertimeNotification,
@@ -23,7 +24,7 @@ exports.createOvertime = async (req, res) => {
 
 exports.getOvertime = async (req, res) => {
   try {
-    const data = await Overtime.findAll();
+    const data = await getAllListOvertimeRequest();
     if (data.length <= 0) return res.status(404).send({ message: 'Overtime not found.' });
     return res.send(data);
   } catch (error) {
@@ -43,12 +44,12 @@ exports.getOvertimeById = async (req, res) => {
 };
 
 exports.approveStatusOvertime = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.body;
   try {
     const getOvertimeById = await Overtime.findOne({ where: { id_req_overtime: id } });
     if (!getOvertimeById) return res.status(404).send({ message: 'Overtime not found.' });
     await getOvertimeById.update({ request_status_id: 2, updated_at: Date.now() });
-    await sendApproveOvertimeNotification(getOvertimeById.user_id, getOvertimeById.id_req_overtime);
+    // await sendApproveOvertimeNotification(getOvertimeById.user_id, getOvertimeById.id_req_overtime);
     return res.send({ message: 'Status overtime berhasil diapproved' });
   } catch (error) {
     return res.status(500).send(error.message);
@@ -56,7 +57,7 @@ exports.approveStatusOvertime = async (req, res) => {
 };
 
 exports.rejectStatusOvertime = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.body;
   try {
     const getOvertimeById = await Overtime.findOne({ where: { id_req_overtime: id } });
     if (!getOvertimeById) return res.status(404).send({ message: 'Overtime not found.' });

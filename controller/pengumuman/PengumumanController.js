@@ -2,7 +2,7 @@ const Pengumuman = require('../../model/PengumumanModel');
 
 exports.getPengumuman = async (req, res) => {
   try {
-    const data = await Pengumuman.findAll();
+    const data = await Pengumuman.findAll({ order: [['created_at', 'DESC']] });
     if (data.length <= 0) return res.status(404).send({ message: 'Pengumuman tidak ditemukan' });
     return res.send(data);
   } catch (error) {
