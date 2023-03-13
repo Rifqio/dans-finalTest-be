@@ -1,3 +1,5 @@
+const { QueryTypes } = require('sequelize');
+const { sequelize } = require('../../config/database');
 const getAllListOvertimeRequest = require('../../lib/queries/GetAllListOvertimeRequest');
 const Overtime = require('../../model/OvertimeModel');
 const {
@@ -25,6 +27,27 @@ exports.createOvertime = async (req, res) => {
 exports.getOvertime = async (req, res) => {
   try {
     const data = await getAllListOvertimeRequest();
+    if (data.length <= 0) return res.status(404).send({ message: 'Overtime not found.' });
+    return res.send(data);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+};
+
+exports.getMyOvertimeHistory = async (req, res) => {
+  const { user_id } = req.user;
+  try {
+    const data = await sequelize.query(
+       `SELECT
+        request_overtime.*,
+        status_request.type 
+        FROM
+        request_overtime
+        INNER JOIN status_request ON request_overtime.request_status_id = status_request.id_request_status 
+        WHERE
+        request_overtime.user_id = ${user_id}`,
+      { type: QueryTypes.SELECT }
+    );
     if (data.length <= 0) return res.status(404).send({ message: 'Overtime not found.' });
     return res.send(data);
   } catch (error) {
@@ -62,7 +85,7 @@ exports.rejectStatusOvertime = async (req, res) => {
     const getOvertimeById = await Overtime.findOne({ where: { id_req_overtime: id } });
     if (!getOvertimeById) return res.status(404).send({ message: 'Overtime not found.' });
     await getOvertimeById.update({ request_status_id: 3, updated_at: Date.now() });
-    await sendRejectOvertimeNotification(getOvertimeById.user_id, getOvertimeById.id_req_overtime)
+    await sendRejectOvertimeNotification(getOvertimeById.user_id, getOvertimeById.id_req_overtime);
     return res.send({ message: 'Status overtime berhasil direject' });
   } catch (error) {
     return res.status(500).send(error.message);

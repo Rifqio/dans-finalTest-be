@@ -9,14 +9,20 @@ const Pengumuman = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    title: {
+      type: DataTypes.STRING,
+    },
     content: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      // allowNull: false,
     },
     user_id: {
       type: DataTypes.INTEGER,
     },
     created_at: {
+      type: DataTypes.DATE,
+    },
+    updated_at: {
       type: DataTypes.DATE,
     },
   },

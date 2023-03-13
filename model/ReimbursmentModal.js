@@ -16,6 +16,9 @@ const Reimbursment = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    bukti: {
+      type: DataTypes.STRING,
+    },
     request_status_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
